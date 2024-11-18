@@ -15,12 +15,12 @@ function setup() {
   console.log(height);
   textFont("Helvetica");
   createCanvas(windowWidth, height/(windowWidth/182)+(windowWidth/50)*101);
+  background("#ebedff");
   noLoop()
   }
 
 function draw(){
   disegnaLegenda();
-  grid();//*************************************************************DA ELIMINARE
   translate(0,windowWidth/30);
   for(let i=0; i < data.getRowCount(); i++){
   nome = data.getString(i, "name");
@@ -35,15 +35,15 @@ function draw(){
 }
 
 function disegnaFiume(nome,lunghezza, superficie, portata, color,){
-  strokeWeight(1);
+  strokeWeight(windowWidth/950);
   stroke(150)
   line( windowWidth/3, 0, windowWidth-windowWidth/30, 0)
   noFill();
   stroke(color);
   strokeWeight(windowWidth/100+portata/(windowWidth*2));
   x1=x2=x9=x10=windowWidth/3*2;
-  x3=x4=x5=windowWidth/3*2-superficie/(windowWidth*8);
-  x6=x7=x8=windowWidth/3*2+superficie/(windowWidth*8);
+  x3=x4=x5=windowWidth/3*2-superficie/(windowWidth*10);
+  x6=x7=x8=windowWidth/3*2+superficie/(windowWidth*10);
   let num=random(10)
   if(num<5){
     x3=x4=x5=windowWidth/3*2+superficie/(windowWidth*8);
@@ -65,9 +65,10 @@ function disegnaFiume(nome,lunghezza, superficie, portata, color,){
   bezier(x4,y4,x5,y5,x6,y6,x7,y7)
   strokeCap(SQUARE); 
   bezier(x7,y7,x8,y8,x9,y9,x10,y10)
-  textSize(windowHeight/60)
+  textSize(windowWidth*windowHeight/70000);
   strokeWeight(0)
   fill(150)
+  textStyle(NORMAL);
   text(nome, windowWidth/3, windowHeight/30)
   }
 
@@ -76,11 +77,36 @@ function disegnaFiume(nome,lunghezza, superficie, portata, color,){
   }
 
   function disegnaLegenda(){
-    strokeWeight(1);
+    strokeWeight(windowWidth/1000);
     stroke(150);
-    rect(windowWidth/30,windowWidth/30,windowWidth/3-windowWidth/10,windowWidth/3-windowWidth/10,windowWidth/50);
-    stroke(150);
+    rect(windowWidth/30,windowWidth/30,windowWidth/3-windowWidth/13,windowWidth/2.5,windowWidth/50);
+    //Rettangolo temperatura
+    strokeWeight(0);
+    fillGradient('linear', {
+      from : [windowWidth/3-2*windowWidth/7.2,  windowWidth/2-windowWidth/6],   // x, y : Coordinates
+      to : [windowWidth/3-2*windowWidth/7.2+windowWidth/5,  windowWidth/2-windowWidth/6], // x, y : Coordinates
+      steps : [
+        color(0, 19, 163),
+        color(133, 147, 255),
+      ] // Array of p5.color objects or arrays containing [p5.color Object, Color Stop (0 to 1)]
+    });
+    rect(windowWidth/3-2*windowWidth/7.2, windowWidth/2-windowWidth/8, windowWidth/4.7, windowWidth/30,windowWidth);
+    strokeWeight(windowWidth/1000);
     line(windowWidth/20, windowWidth/18, windowWidth/3-2*windowWidth/20, windowWidth/18);
+    
+    //Linea Superficie
+    line(windowWidth/11, windowWidth/3.5, windowWidth/3-2*windowWidth/18, windowWidth/3.5);
+    line(windowWidth/11, windowWidth/3.5, windowWidth/11, windowWidth/3.6);
+    line(windowWidth/3-2*windowWidth/18, windowWidth/3.6, windowWidth/3-2*windowWidth/18, windowWidth/3.5);
+    //Linea Lunghezza
+    line(windowWidth/3-windowWidth/13, windowWidth/3-windowWidth/3.6,windowWidth/3-windowWidth/13, windowWidth/3-windowWidth/9.1)
+    line(windowWidth/3-windowWidth/12, windowWidth/3-windowWidth/3.6,windowWidth/3-windowWidth/13, windowWidth/3-windowWidth/3.6)
+    line(windowWidth/3-windowWidth/12, windowWidth/3-windowWidth/9.1,windowWidth/3-windowWidth/13, windowWidth/3-windowWidth/9.1)
+    //Linea portata
+    line(windowWidth/7.1, windowWidth/4, windowWidth/3-2*windowWidth/11, windowWidth/4);
+    line(windowWidth/7.1, windowWidth/4.1, windowWidth/7.1, windowWidth/4);
+    line(windowWidth/3-2*windowWidth/11, windowWidth/4.1, windowWidth/3-2*windowWidth/11, windowWidth/4);
+    
     noFill();
     stroke("#5C6FFF");
     strokeWeight(windowWidth/100);
@@ -104,10 +130,20 @@ function disegnaFiume(nome,lunghezza, superficie, portata, color,){
     bezier(x4,y4,x5,y5,x6,y6,x7,y7)
     strokeCap(SQUARE); 
     bezier(x7,y7,x8,y8,x9,y9,x10,y10)
-    textSize(windowHeight/70)
+    textSize(windowHeight/60)
     strokeWeight(0)
     fill(150)
-    text("nome", windowWidth/30*2, windowWidth/30*2);
+    textSize(windowWidth*windowHeight/70000);
+    textStyle(ITALIC);
+    text("nome", windowWidth/3-2*windowWidth/7.1, windowWidth/15);
+    text("Superficie", windowWidth/3-windowWidth/4.1, windowWidth/3-windowWidth/32);
+    text("Portata", windowWidth/7.1, windowWidth/3-windowWidth/15);
+    text("Temperatura media", windowWidth/3-2*windowWidth/7.4, windowWidth/2.8);
+    push();
+    rotate(270);
+    translate(windowWidth/3-windowWidth/15, windowWidth/3-windowWidth/9.1);
+    text("Lunghezza", - windowWidth/3-windowWidth/6.4, windowWidth/3-windowWidth/3.5);
+    pop();
   }
 
   function colorFunction(temp) {
@@ -115,12 +151,4 @@ function disegnaFiume(nome,lunghezza, superficie, portata, color,){
     let warmColor = color(133, 147, 255); 
     let normalizedTemp = map(temp, -7.5, 27.5, 0, 1);
     return lerpColor(coldColor, warmColor, normalizedTemp);
-  }
-
-  function grid(){
-    stroke(10);
-    strokeWeight(5);
-    line(windowWidth/3,0,windowWidth/3, windowHeight);
-    line(windowWidth/6,0,windowWidth/6, windowHeight);
-    line(windowWidth/3*2,0,windowWidth/3*2, windowHeight);
   }
