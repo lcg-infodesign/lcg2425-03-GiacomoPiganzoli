@@ -8,6 +8,7 @@ function preload(){
 }
 
 function setup() {
+  angleMode(DEGREES);
   let height=0;
   for (let j = 0; j < data.getRowCount(); j++) {
   let value = int(data.getString(j, "length"));
@@ -93,7 +94,6 @@ function disegnaFiume(nome,lunghezza, superficie, portata, color,){
     rect(windowWidth/3-2*windowWidth/7.2, windowWidth/2-windowWidth/8, windowWidth/4.7, windowWidth/30,windowWidth);
     strokeWeight(windowWidth/1000);
     line(windowWidth/20, windowWidth/18, windowWidth/3-2*windowWidth/20, windowWidth/18);
-    
     //Linea Superficie
     line(windowWidth/11, windowWidth/3.5, windowWidth/3-2*windowWidth/18, windowWidth/3.5);
     line(windowWidth/11, windowWidth/3.5, windowWidth/11, windowWidth/3.6);
@@ -139,6 +139,9 @@ function disegnaFiume(nome,lunghezza, superficie, portata, color,){
     text("Superficie", windowWidth/3-windowWidth/4.1, windowWidth/3-windowWidth/32);
     text("Portata", windowWidth/7.1, windowWidth/3-windowWidth/15);
     text("Temperatura media", windowWidth/3-2*windowWidth/7.4, windowWidth/2.8);
+    fill("white");
+    text("-7,5°", windowWidth/3-2*windowWidth/7.6, windowWidth/2.52);
+    text("27,5°", windowWidth/3-2*windowWidth/18, windowWidth/2.52);
     push();
     rotate(270);
     translate(windowWidth/3-windowWidth/15, windowWidth/3-windowWidth/9.1);
@@ -152,3 +155,4 @@ function disegnaFiume(nome,lunghezza, superficie, portata, color,){
     let normalizedTemp = map(temp, -7.5, 27.5, 0, 1);
     return lerpColor(coldColor, warmColor, normalizedTemp);
   }
+
