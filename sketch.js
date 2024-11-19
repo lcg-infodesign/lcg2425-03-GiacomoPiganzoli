@@ -138,10 +138,12 @@ function disegnaFiume(nome,lunghezza, superficie, portata, color,){
     text("nome", windowWidth/3-2*windowWidth/7.1, windowWidth/15);
     text("Superficie", windowWidth/3-windowWidth/4.1, windowWidth/3-windowWidth/32);
     text("Portata", windowWidth/7.1, windowWidth/3-windowWidth/15);
-    text("Temperatura media", windowWidth/3-2*windowWidth/7.4, windowWidth/2.8);
+    text("Temperatura media", windowWidth/3-2*windowWidth/7.4, windowWidth/2.75);
     fill("white");
-    text("-7,5°", windowWidth/3-2*windowWidth/7.6, windowWidth/2.52);
-    text("27,5°", windowWidth/3-2*windowWidth/18, windowWidth/2.52);
+    textSize(windowWidth*windowHeight/80000);
+    text("-7,5°", windowWidth/3-2*windowWidth/7.6, windowWidth/2.53);
+    text("27,5°", windowWidth/3-2*windowWidth/18, windowWidth/2.53);
+    fill(150);
     push();
     rotate(270);
     translate(windowWidth/3-windowWidth/15, windowWidth/3-windowWidth/9.1);
@@ -155,4 +157,3 @@ function disegnaFiume(nome,lunghezza, superficie, portata, color,){
     let normalizedTemp = map(temp, -7.5, 27.5, 0, 1);
     return lerpColor(coldColor, warmColor, normalizedTemp);
   }
-
