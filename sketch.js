@@ -7,6 +7,7 @@ function preload(){
   data = loadTable("Assets/rivers-data.csv", "csv", "header");
 }
 
+//****************************************************************************************************************** SETUP */
 function setup() {
   angleMode(DEGREES);
   let height=0;
@@ -19,6 +20,8 @@ function setup() {
   background("#ebedff");
   noLoop()
   }
+
+//****************************************************************************************************************** DRAW */
 
 function draw(){
   disegnaLegenda();
@@ -34,6 +37,7 @@ function draw(){
   sposta()
   }
 }
+//****************************************************************************************************************** DISEGNAFIUME */
 
 function disegnaFiume(nome,lunghezza, superficie, portata, color,){
   strokeWeight(windowWidth/950);
@@ -43,12 +47,12 @@ function disegnaFiume(nome,lunghezza, superficie, portata, color,){
   stroke(color);
   strokeWeight(windowWidth/100+portata/(windowWidth*2));
   x1=x2=x9=x10=windowWidth/3*2;
-  x3=x4=x5=windowWidth/3*2-superficie/(windowWidth*10);
-  x6=x7=x8=windowWidth/3*2+superficie/(windowWidth*10);
+  x3=x4=x5=windowWidth/3*2-superficie/(windowWidth*11);
+  x6=x7=x8=windowWidth/3*2+superficie/(windowWidth*11);
   let num=random(10)
   if(num<5){
-    x3=x4=x5=windowWidth/3*2+superficie/(windowWidth*8);
-    x6=x7=x8=windowWidth/3*2-superficie/(windowWidth*8);
+    x3=x4=x5=windowWidth/3*2+superficie/(windowWidth*11);
+    x6=x7=x8=windowWidth/3*2-superficie/(windowWidth*11);
     }
   let l=lunghezza/(windowWidth/180)+windowWidth/50;
   y1=0;
@@ -72,11 +76,13 @@ function disegnaFiume(nome,lunghezza, superficie, portata, color,){
   textStyle(NORMAL);
   text(nome, windowWidth/3, windowHeight/30)
   }
+//****************************************************************************************************************** SPOSTA */
 
   function sposta(){
     translate(0,lunghezza/(windowWidth/180)+windowWidth/50);
   }
 
+//****************************************************************************************************************** DISEGNALEGENDA */
   function disegnaLegenda(){
     strokeWeight(windowWidth/1000);
     stroke(150);
@@ -151,9 +157,69 @@ function disegnaFiume(nome,lunghezza, superficie, portata, color,){
     pop();
   }
 
+//****************************************************************************************************************** COLORE FIUME */
+
   function colorFunction(temp) {
     let coldColor = color(0, 19, 163);
     let warmColor = color(133, 147, 255); 
     let normalizedTemp = map(temp, -7.5, 27.5, 0, 1);
     return lerpColor(coldColor, warmColor, normalizedTemp);
   }
+
+//****************************************************************************************************************** GRADIENTE */
+
+  // Funzione per il disegno di gradienti lineari, radial e conici
+function fillGradient(type = 'linear', props = {}) {
+  // Parametri di default per i vari tipi di gradiente
+  let _defaults = {
+    'linear': {
+      from: [0, 0], // x, y
+      to: [width, height], // x, y
+      steps: [color(255), color(0, 96, 164), color(0)] // Array di colori
+    },
+    'radial': {
+      from: [width / 2, height / 2, 0], // x, y, radius
+      to: [width / 2, height / 2, Math.max(width / 2, height / 2)], // x, y, radius
+      steps: [color(255), color(0, 96, 164), color(0)] // Array di colori
+    },
+    'conic': {
+      from: [width / 2, height / 2, 90], // x, y, angle in gradi
+      steps: [color(255), color(0, 96, 164), color(0)] // Array di colori
+    }
+  };
+
+  // Impostazione del tipo di gradiente, con fallback a 'linear'
+  let _type = type.toLowerCase();
+  _type = _defaults[_type] ? _type : 'linear';
+
+  // Unione dei parametri di default con quelli passati dalla funzione
+  let _props = Object.assign({}, _defaults[_type], props);
+
+  // Creazione del gradiente in base al tipo
+  let _gradient;
+  if (_type === 'linear') {
+    _gradient = drawingContext.createLinearGradient(
+      _props.from[0], _props.from[1], _props.to[0], _props.to[1]
+    );
+  } else if (_type === 'radial') {
+    _gradient = drawingContext.createRadialGradient(
+      _props.from[0], _props.from[1], _props.from[2],
+      _props.to[0], _props.to[1], _props.to[2]
+    );
+  } else if (_type === 'conic') {
+    _gradient = drawingContext.createConicGradient(
+      radians(_props.from[2]), _props.from[0], _props.from[1]
+    );
+  }
+
+  // Aggiunta dei colori e delle posizioni nel gradiente
+  _props.steps.forEach((step, i) => {
+    let _step = Array.isArray(step) ? step : [step]; // Gestisce i singoli valori o array di valori
+    let _stop = _step[1] || (i / (_props.steps.length - 1)); // Imposta la posizione del colore nel gradiente
+    _stop = Math.min(1, Math.max(0, _stop)); // Limita il valore tra 0 e 1
+    _gradient.addColorStop(_stop, _step[0]);
+  });
+
+  // Imposta il gradiente come `fillStyle`
+  drawingContext.fillStyle = _gradient;
+}
